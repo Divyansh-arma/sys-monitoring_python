@@ -1,0 +1,22 @@
+name: "Building and Pushing Docker Image"
+on:
+  push:
+    branches:
+      - python-app-deployment
+    paths:
+      - '**'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: |
+          docker build -t python-app:latest .
+
+      - name: Push Docker image
+        run: |
+          docker push registry.digitalocean.com/smoke/python-app:latest
