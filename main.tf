@@ -16,7 +16,7 @@ provider "digitalocean" {
 
 resource "digitalocean_kubernetes_cluster" "py-microservices-cluster" {
   name   = "py-microservices-cluster"
-  region = "blr1"
+  region = var.region
 
   version = "latest"
 
