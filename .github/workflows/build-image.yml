@@ -15,7 +15,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t python-app:latest .
+          docker build -t registry.digitalocean.com/smoke/python-app:latest .
 
       - name: Push Docker image
         run: |
