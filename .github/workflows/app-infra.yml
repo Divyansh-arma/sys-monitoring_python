@@ -7,6 +7,9 @@ on:
       paths:
         - '*.tf'
 
+env:
+    var-region: ${{ secrets.DO_CONNECT_TOKEN}}
+
 jobs:
     terraform:
         name: "Terraform code changes"
