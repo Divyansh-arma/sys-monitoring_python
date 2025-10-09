@@ -9,7 +9,7 @@ on:
       - "*.tf"
 
 env:
-  var-region: ${{ secrets.DO_CONNECT_TOKEN}}
+  TF_VAR_do_token: ${{ secrets.DO_CONNECT_TOKEN}}
 
 jobs:
 
