@@ -1,0 +1,56 @@
+---
+name: python app Infra
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - deployment-infra
+    paths:
+      - "*.tf"
+
+env:
+  TF_VAR_do_token: ${{ secrets.DO_CONNECT_TOKEN}}
+
+jobs:
+
+  terraform:
+    name: Terraform code changes
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.9.2
+
+      - name: Terraform Init
+        id: terraform_init
+        run: terraform init
+
+      - name: Terraform format
+        id: terraform_fmt
+        run: terraform fmt -check
+
+      - name: Terraform validate
+        id: terraform_validate
+        run: terraform validate
+
+      - name: Terraform plan
+        id: terraform_plan
+        run: terraform plan -out=tfplan
+        continue-on-error: true
+
+      - name: Terraform plan output
+        if: steps.terraform_plan.outcome == 'failure'
+        run: exit 1
+
+      - name: Terraform apply
+        id: terraform_apply
+        if: steps.terraform_plan.outcome == 'success' && github.event_name == 'push'
+        run: terraform apply -auto-approve -input=false -parallelism=1 tfplan
