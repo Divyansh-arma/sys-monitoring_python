@@ -2,11 +2,11 @@
 name: python app Infra
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - python-app-deployment
-  #   paths:
-  #     - "*.tf"
+  push:
+    branches:
+      - deployment-infra
+    paths:
+      - "*.tf"
 
 env:
   var-region: ${{ secrets.DO_CONNECT_TOKEN}}
