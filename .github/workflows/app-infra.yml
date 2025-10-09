@@ -1,5 +1,5 @@
 ---
-name: python-app-Infra
+name: python app Infra
 on:
   workflow_dispatch:
   push:
