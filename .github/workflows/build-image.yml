@@ -1,5 +1,6 @@
 name: "Building and Pushing Docker Image"
 on:
+  workflow_dispatch: 
   push:
     branches:
       - python-app-deployment
