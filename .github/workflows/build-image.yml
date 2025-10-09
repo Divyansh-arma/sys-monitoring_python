@@ -4,7 +4,13 @@ on:
     branches:
       - python-app-deployment
     paths:
-      - '**'
+      - '*.py'
+      - 'Dockerfile'
+      - 'requirements.txt'
+      - '/template/**'
+
+env:
+  do_token: ${{ secrets.DO_CONNECT_TOKEN }}
 
 jobs:
   build-and-push:
