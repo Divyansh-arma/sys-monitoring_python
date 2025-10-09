@@ -26,5 +26,7 @@ resource "digitalocean_kubernetes_cluster" "py-microservices-cluster" {
     auto_scale = true
     min_nodes  = 1
     max_nodes  = 2
+    
   }
+  registry_integration = true
 }
