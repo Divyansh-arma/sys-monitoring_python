@@ -1,4 +1,3 @@
----
 name: python app Infra
 on:
   workflow_dispatch:
