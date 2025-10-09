@@ -2,7 +2,7 @@
 name: python app Infra
 on:
   # workflow_dispatch:
-  push:
+  pull_request:
     branches:
       - deployment-infra
     paths:
