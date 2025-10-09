@@ -1,5 +1,6 @@
 name: "Building and Pushing Docker Image"
 on:
+  workflow_dispatch:   # allows manual triggering from GitHub UI
   push:
     branches:
       - python-app-deployment
@@ -18,6 +19,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Install doctl and authenticate
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DO_CONNECT_TOKEN }}    # ensure this secret exists
+
+      - name: Login to DigitalOcean registry
+        run: doctl registry login
 
       - name: Build Docker image
         run: |
