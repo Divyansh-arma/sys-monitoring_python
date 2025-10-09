@@ -22,8 +22,8 @@ jobs:
 
       - name: Install doctl and authenticate
         uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DO_CONNECT_TOKEN }}    # ensure this secret exists
+        # with:
+          # token: ${ secrets.DO_CONNECT_TOKEN }}    # ensure this secret exists
 
       - name: Build Docker image
         run: |
