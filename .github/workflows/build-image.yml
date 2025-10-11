@@ -20,15 +20,15 @@ jobs:
       - name: Install doctl and authenticate
         uses: digitalocean/action-doctl@v2
         with:
-          token: ${{ secrets.DO_CONNECT_TOKEN }}    # ensure this secret exists
+          token: ${{ secrets.DO_CONNECT_TOKEN }} # DigitalOcean API token stored in GitHub Secrets
 
       - name: Build Docker image
         run: |
-          docker build -t registry.digitalocean.com/smoke/python-app:latest .
+          docker build -t registry.digitalocean.com/smoke/python-app:${{ github.run_number }} .
       
       - name: Login to DigitalOcean registry
         run: doctl registry login
 
       - name: Push Docker image
         run: |
-          docker push registry.digitalocean.com/smoke/python-app:latest
+          docker push registry.digitalocean.com/smoke/python-app:${{ github.run_number }}
