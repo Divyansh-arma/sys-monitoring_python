@@ -53,18 +53,17 @@ jobs:
       - name: Configure kubectl
         run: |
           echo "Using cluster: $DO_CLUSTER_NAME"
-          doctl kubernetes cluster kubeconfig save $DO_CLUSTER_NAME
+          doctl kubernetes cluster kubeconfig save "$DO_CLUSTER_NAME"
 
       - name: Update deployment
         run: |
           kubectl set image deployment/${DEPLOYMENT_NAME} \
-            $CONTAINER_NAME=${REGISTRY}/${IMAGE_NAME}:${{ github.run_number }} \
-            -n
+            $CONTAINER_NAME=${REGISTRY}/${IMAGE_NAME}:${{ github.run_number }}
 
       - name: Verify deployment
         run: |
-          kubectl rollout status deployment/${DEPLOYMENT_NAME} -n
-          kubectl get pods -n
+          kubectl rollout status deployment/${DEPLOYMENT_NAME}
+          kubectl get pods
 
       - name: Port forward to test the application
         run: |
