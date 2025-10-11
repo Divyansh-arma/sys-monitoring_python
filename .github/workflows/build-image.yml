@@ -12,8 +12,10 @@ on:
 
 env:
   DO_CONNECT_TOKEN: ${{ secrets.DO_CONNECT_TOKEN }} # DigitalOcean API token stored in GitHub Secrets
-  REGISTRY: registry.digitalocean.com/smoke
-  IMAGE_NAME: python-app
+  DEPLOYMENT_NAME: ${{ vars.DEPLOYMENT_NAME }}
+  REGISTRY: ${{ vars.REGISTRY }}
+  IMAGE_NAME: ${{ vars.IMAGE_NAME }}
+  CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
   DO_CLUSTER_NAME: ${{ vars.DO_CLUSTER_NAME }} # DigitalOcean Kubernetes cluster name stored in GitHub Secrets
       
 jobs:
@@ -55,11 +57,15 @@ jobs:
 
       - name: Update deployment
         run: |
-          kubectl set image deployment/your-deployment \
-            your-container=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }} \
-            -n your-namespace
+          kubectl set image deployment/${DEPLOYMENT_NAME} \
+            $CONTAINER_NAME=${REGISTRY}/${IMAGE_NAME}:${{ github.run_number }} \
+            -n
 
       - name: Verify deployment
         run: |
-          kubectl rollout status deployment/your-deployment -n your-namespace
-          kubectl get pods -n your-namespace
+          kubectl rollout status deployment/${DEPLOYMENT_NAME} -n
+          kubectl get pods -n
+
+      - name: Port forward to test the application
+        run: |
+          kubectl port-forward deployment/${DEPLOYMENT_NAME} 5000:5000
