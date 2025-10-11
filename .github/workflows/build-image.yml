@@ -32,3 +32,19 @@ jobs:
       - name: Push Docker image
         run: |
           docker push registry.digitalocean.com/smoke/python-app:${{ github.run_number }}
+
+  Deploy-to-kubernetes:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install doctl and authenticate
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DO_CONNECT_TOKEN }} # DigitalOcean API token stored in GitHub Secrets
+
+      - name: Update Kubernetes deployment
+        run: |
+          doctl kubernetes cluster kubeconfig save py-microservices-cluster 
+          kubectl set image deployment/python-app-deployment python-app=registry.digitalocean.com/smoke/python-app:${{ github.run_number }} --record
+          kubectl rollout status deployment/python-app-deployment
+          kubectl get pods
