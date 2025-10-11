@@ -9,6 +9,12 @@ on:
       - 'Dockerfile'
       - 'requirements.txt'
       - '/template/**'
+
+env:
+  DO_CONNECT_TOKEN: ${{ secrets.DO_CONNECT_TOKEN }} # DigitalOcean API token stored in GitHub Secrets
+  REGISTRY: registry.digitalocean.com/smoke
+  IMAGE_NAME: python-app
+  DO_CLUSTER_NAME: ${{ vars.DO_CLUSTER_NAME }} # DigitalOcean Kubernetes cluster name stored in GitHub Secrets
       
 jobs:
   build-and-push:
@@ -20,7 +26,7 @@ jobs:
       - name: Install doctl and authenticate
         uses: digitalocean/action-doctl@v2
         with:
-          token: ${{ secrets.DO_CONNECT_TOKEN }} # DigitalOcean API token stored in GitHub Secrets
+          token: $DO_CONNECT_TOKEN
 
       - name: Build Docker image
         run: |
@@ -40,11 +46,20 @@ jobs:
       - name: Install doctl and authenticate
         uses: digitalocean/action-doctl@v2
         with:
-          token: ${{ secrets.DO_CONNECT_TOKEN }} # DigitalOcean API token stored in GitHub Secrets
+          token: $DO_CONNECT_TOKEN
 
-      - name: Update Kubernetes deployment
+      - name: Configure kubectl
         run: |
-          doctl kubernetes cluster kubeconfig save py-microservices-cluster 
-          kubectl set image deployment/python-app-deployment python-app=registry.digitalocean.com/smoke/python-app:${{ github.run_number }} --record
-          kubectl rollout status deployment/python-app-deployment
-          kubectl get pods
+          echo "Using cluster: $DO_CLUSTER_NAME"
+          doctl kubernetes cluster kubeconfig save $DO_CLUSTER_NAME
+
+      - name: Update deployment
+        run: |
+          kubectl set image deployment/your-deployment \
+            your-container=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }} \
+            -n your-namespace
+
+      - name: Verify deployment
+        run: |
+          kubectl rollout status deployment/your-deployment -n your-namespace
+          kubectl get pods -n your-namespace
