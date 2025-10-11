@@ -51,5 +51,5 @@ jobs:
 
       - name: Terraform apply
         id: terraform_apply
-        if: steps.terraform_plan.outcome == 'success' && github.event_name == 'push'
+        if: steps.terraform_plan.outcome == 'success' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
         run: terraform apply -auto-approve -input=false -parallelism=1 tfplan
