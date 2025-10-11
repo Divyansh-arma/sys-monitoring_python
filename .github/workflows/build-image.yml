@@ -48,7 +48,7 @@ jobs:
       - name: Install doctl and authenticate
         uses: digitalocean/action-doctl@v2
         with:
-          token: $DO_CONNECT_TOKEN
+          token: ${{ secrets.DO_CONNECT_TOKEN }}
 
       - name: Configure kubectl
         run: |
