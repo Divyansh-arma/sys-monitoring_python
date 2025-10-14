@@ -17,16 +17,16 @@ jobs:
     runs-on: [self-hosted, windows]
     defaults:
       run:
-        shell: bash
+        shell: powershell
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.9.2
+          terraform_version: 1.13.3
 
       - name: Terraform Init
         id: terraform_init
